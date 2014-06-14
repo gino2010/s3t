@@ -1,4 +1,4 @@
-S3T shadow socks server tools
+S3T Shadow Socks Server Tools
 ===
 This project is created for maintance shadow socks server data
 
