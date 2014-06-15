@@ -108,8 +108,8 @@ class DataBase:
             print('No best server')
 
     #output specific one
-    def get_specifi_one(self, id):
-        for row in self.cur.execute('SELECT * FROM account WHERE id=?', (id,)):
+    def get_specific_one(self, _id):
+        for row in self.cur.execute('SELECT * FROM account WHERE id=?', (_id,)):
             print(Shadow(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
 
     #check all item in database and change status column
@@ -244,7 +244,7 @@ if __name__ == '__main__':
             db.delete_item()
         elif choose == '6':
             input_id = raw_input('please input server id: ')
-            db.get_specifi_one(input_id)
+            db.get_specific_one(input_id)
         elif choose == '0':
             print('Exit')
             break
