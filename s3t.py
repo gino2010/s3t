@@ -1,7 +1,7 @@
 # coding=utf-8
 # need extra pacakage: python-zbar
 # under ubuntu install this package in software centre
-# v0.39
+# v0.44
 import base64
 from datetime import date
 import os
@@ -73,6 +73,7 @@ class DataBase:
                 '(?, ?, ?, ?, ?, ?, ?, ?)', (_shadow.server, _shadow.port, _shadow.password, _shadow.method,
                                              _shadow.status, _shadow.save_date, _shadow.priority, _shadow.memo))
             self.conn.commit()
+            print('server:%s is added in database' % _shadow.server)
         except sqlite3.Error as e:
             print(e)
             self.conn.rollback()
@@ -121,7 +122,7 @@ class DataBase:
                 print('server %s is be checking...' % row[0])
                 #via ping to check ip address reachable
                 rel = os.popen('ping -c %s %s' % (PN, row[0])).read()
-                che = '{} packets transmitted, 0 received, +{} errors, 100% packet loss,'.format(PN, PN)
+                che = '100% packet loss'
                 if che in rel:
                     print('failed!')
                     self.cur.execute('UPDATE account SET status="dead" WHERE server=?', (row[0],))
@@ -136,7 +137,7 @@ class DataBase:
                     avg = _sum / len(result)
                     priority = avg * mul
                     self.cur.execute('UPDATE account SET status="normal", priority=? WHERE server=?',
-                                     (str(priority), row[0]))
+                                     (priority, row[0]))
                 self.conn.commit()
         except sqlite3.Error as e:
             print(e)
