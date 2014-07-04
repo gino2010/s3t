@@ -1,7 +1,7 @@
 # coding=utf-8
 # need extra pacakage: python-zbar
 # under ubuntu install this package in software centre
-# v0.44
+# v0.57
 import base64
 from datetime import date
 import os
@@ -16,6 +16,8 @@ DATABASE = 'shadowsocks.db'
 LOCAL_PORT = '8020'
 TIMEOUT = '600'
 PN = '2'
+#setting shadow socks config file
+SS_CONF = '/usr/lib/node_modules/shadowsocks/config.json'
 
 TEMPLATE = '''{
     "server":"%s",
@@ -112,6 +114,8 @@ class DataBase:
     def get_specific_one(self, _id):
         for row in self.cur.execute('SELECT * FROM account WHERE id=?', (_id,)):
             print(Shadow(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+            f = open(SS_CONF, 'w')
+            f.write(str(Shadow(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])))
 
     #check all item in database and change status column
     def check_all_items(self):
