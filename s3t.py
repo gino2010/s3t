@@ -131,17 +131,21 @@ class DataBase:
                     print('failed!')
                     self.cur.execute('UPDATE account SET status="dead" WHERE server=?', (row[0],))
                 else:
-                    print('success!')
                     #base on ping time to set priority
                     result = re.findall('time=(\d+) ms', rel)
                     mul = int(PN) - len(result) + 1
                     _sum = 0
                     for r in result:
                         _sum += int(r)
-                    avg = _sum / len(result)
-                    priority = avg * mul
-                    self.cur.execute('UPDATE account SET status="normal", priority=? WHERE server=?',
-                                     (priority, row[0]))
+                    if len(result) == 0:
+                        print('failed!')
+                        self.cur.execute('UPDATE account SET status="dead" WHERE server=?', (row[0],))
+                    else:
+                        print('success!')
+                        avg = _sum / len(result)
+                        priority = avg * mul
+                        self.cur.execute('UPDATE account SET status="normal", priority=? WHERE server=?',
+                                        (priority, row[0]))
                 self.conn.commit()
         except sqlite3.Error as e:
             print(e)
@@ -200,7 +204,7 @@ def decode_data(_data):
     rel = base64.b64decode(coded_string)
     #translate to Shadow object
     _item = rel.split(':')
-    _shadow = Shadow(_item[1].split('@')[1], _item[2], _item[1].split('@')[0], _item[0], memo=_data[0])
+    _shadow = Shadow(_item[1].split('@')[1], _item[2], _item[1].split('@')[0], _item[0], memo=_data[0].decode("utf8"))
     return _shadow
 
 
